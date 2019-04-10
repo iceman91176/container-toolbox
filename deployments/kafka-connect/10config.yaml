@@ -1,0 +1,69 @@
+apiVersion: v1
+data:
+  connect.properties: "# Sample configuration for a distributed Kafka Connect worker
+    that uses Avro serialization and\n# integrates the the Schema Registry. This sample
+    configuration assumes a local installation of\n# Confluent Platform with all services
+    running on their default ports.\n\n# Bootstrap Kafka servers. If multiple servers
+    are specified, they should be comma-separated.\nbootstrap.servers=bootstrap.kafka-dev:29092\n\n#
+    The group ID is a unique identifier for the set of workers that form a single
+    Kafka Connect\n# cluster\ngroup.id=connect-cluster\n\n# The converters specify
+    the format of data in Kafka and how to translate it into Connect data.\n# Every
+    Connect user will need to configure these based on the format they want their
+    data in\n# when loaded from or stored into Kafka\nkey.converter=io.confluent.connect.avro.AvroConverter\nkey.converter.schema.registry.url=http://schema-registry:8080\nvalue.converter=io.confluent.connect.avro.AvroConverter\nvalue.converter.schema.registry.url=http://schema-registry:8080\n\n#
+    Internal Storage Topics.\n#\n# Kafka Connect distributed workers store the connector
+    and task configurations, connector offsets,\n# and connector statuses in three
+    internal topics. These topics MUST be compacted.\n# When the Kafka Connect distributed
+    worker starts, it will check for these topics and attempt to create them\n# as
+    compacted topics if they don't yet exist, using the topic name, replication factor,
+    and number of partitions\n# as specified in these properties, and other topic-specific
+    settings inherited from your brokers'\n# auto-creation settings. If you need more
+    control over these other topic-specific settings, you may want to\n# manually
+    create these topics before starting Kafka Connect distributed workers.\n#\n# The
+    following properties set the names of these three internal topics for storing
+    configs, offsets, and status.\nconfig.storage.topic=connect-configs\noffset.storage.topic=connect-offsets\nstatus.storage.topic=connect-statuses\n\n#
+    The following properties set the replication factor for the three internal topics,
+    defaulting to 3 for each\n# and therefore requiring a minimum of 3 brokers in
+    the cluster. Since we want the examples to run with\n# only a single broker, we
+    set the replication factor here to just 1. That's okay for the examples, but\n#
+    ALWAYS use a replication factor of AT LEAST 3 for production environments to reduce
+    the risk of \n# losing connector offsets, configurations, and status.\nconfig.storage.replication.factor=1\noffset.storage.replication.factor=1\nstatus.storage.replication.factor=1\n\n#
+    The config storage topic must have a single partition, and this cannot be changed
+    via properties. \n# Offsets for all connectors and tasks are written quite frequently
+    and therefore the offset topic\n# should be highly partitioned; by default it
+    is created with 25 partitions, but adjust accordingly\n# with the number of connector
+    tasks deployed to a distributed worker cluster. Kafka Connect records\n# the status
+    less frequently, and so by default the topic is created with 5 partitions.\n#offset.storage.partitions=25\n#status.storage.partitions=5\n\n#
+    The offsets, status, and configurations are written to the topics using converters
+    specified through\n# the following required properties. Most users will always
+    want to use the JSON converter without schemas. \n# Offset and config data is
+    never visible outside of Connect in this format.\ninternal.key.converter=org.apache.kafka.connect.json.JsonConverter\ninternal.value.converter=org.apache.kafka.connect.json.JsonConverter\ninternal.key.converter.schemas.enable=false\ninternal.value.converter.schemas.enable=false\n\n#
+    Confluent Control Center Integration -- uncomment these lines to enable Kafka
+    client interceptors\n# that will report audit data that can be displayed and analyzed
+    in Confluent Control Center\n# producer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor\n#
+    consumer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor\n\n#
+    These are provided to inform the user about the presence of the REST host and
+    port configs\n# Hostname & Port for the REST API to listen on. If this is set,
+    it will bind to the interface used to listen to requests.\nrest.host.name=0.0.0.0\nrest.port=8080\n\n#
+    The Hostname & Port that will be given out to other workers to connect to i.e.
+    URLs that are routable from other servers.\nrest.advertised.host.name=0.0.0.0\nrest.advertised.port=8080\n\n#
+    Set to a list of filesystem paths separated by commas (,) to enable class loading
+    isolation for plugins\n# (connectors, converters, transformations). The list should
+    consist of top level directories that include\n# any combination of:\n# a) directories
+    immediately containing jars with plugins and their dependencies\n# b) uber-jars
+    with plugins and their dependencies\n# c) directories immediately containing the
+    package directory structure of classes of plugins and their dependencies\n# Examples:\n#
+    plugin.path=/usr/local/share/java,/usr/local/share/kafka/plugins,/opt/connectors,\nplugin.path=/usr/share/java/kafka/kafka-connect-jdbc\n\n"
+  log4j.properties: |+
+    log4j.rootLogger=INFO, stdout
+
+    log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+    log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+    log4j.appender.stdout.layout.ConversionPattern=[%d] %p %m (%c:%L)%n
+
+    log4j.logger.org.apache.kafka=ERROR
+    log4j.logger.io.confluent.connect=ERROR
+
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: kafka-connect

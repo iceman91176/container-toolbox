@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-connect
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-connect
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: kafka-connect
+    spec:
+      containers:
+      - name: connect
+        image: docker-registry.default.svc:5000/openshift/kafka-connect:latest
+        env:
+        - name: SCHEMA_REGISTRY_LOG4J_OPTS
+          value: -Dlog4j.configuration=file:/etc/kafka-connect/log4j.properties
+        command:
+        - ./bin/connect-distributed.sh
+        - /etc/kafka-connect/connect.properties
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 60
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: config
+          mountPath: /etc/kafka-connect
+      volumes:
+      - name: config
+        configMap:
+          name: kafka-connect
+
