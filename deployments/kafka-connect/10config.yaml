@@ -52,7 +52,7 @@ data:
     immediately containing jars with plugins and their dependencies\n# b) uber-jars
     with plugins and their dependencies\n# c) directories immediately containing the
     package directory structure of classes of plugins and their dependencies\n# Examples:\n#
-    plugin.path=/usr/local/share/java,/usr/local/share/kafka/plugins,/opt/connectors,\nplugin.path=/usr/share/java/kafka/kafka-connect-jdbc\n\n"
+    plugin.path=/usr/local/share/java,/usr/local/share/kafka/plugins,/opt/connectors,\nplugin.path=/usr/share/java/kafka\n\n"
   log4j.properties: |+
     log4j.rootLogger=INFO, stdout
 
