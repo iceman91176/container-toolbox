@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: broker
+spec:
+  ports:
+  - port: 29092
+  # [podname].broker.[podnamespace].svc.cluster.local
+  clusterIP: None
+  selector:
+    app: kafka

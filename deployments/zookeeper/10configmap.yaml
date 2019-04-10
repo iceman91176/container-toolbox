@@ -1,0 +1,19 @@
+apiVersion: v1
+data:
+  client.cnxns: "60"
+  init: "10"
+  jvm.heap: 1G
+  purge.interval: "0"
+  snap.retain: "3"
+  sync: "5"
+  tick: "2000"
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"client.cnxns":"60","init":"10","jvm.heap":"1G","purge.interval":"0","snap.retain":"3","sync":"5","tick":"2000"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"zk-cm","namespace":"testkafkadeployment"}}
+  creationTimestamp: null
+  name: zk-cm
+  labels:
+    app: zk
+

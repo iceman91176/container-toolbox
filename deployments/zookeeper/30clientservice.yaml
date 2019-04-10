@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: zookeeper
+  labels:
+    app: zk
+spec:
+  ports:
+  - name: client
+    port: 2181
+    protocol: TCP
+    targetPort: 2181
+  selector:
+    app: zk
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

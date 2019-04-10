@@ -1,0 +1,28 @@
+kind: ConfigMap
+metadata:
+  name: schema-registry
+apiVersion: v1
+data:
+  schema-registry.properties: |-
+    port=8080
+    listeners=http://0.0.0.0:8080
+    kafkastore.bootstrap.servers=PLAINTEXT://bootstrap.kafka-dev:29092
+    kafkastore.topic=_schemas
+    debug=false
+    # https://github.com/Landoop/schema-registry-ui#prerequisites
+    access.control.allow.methods=GET,POST,PUT,OPTIONS
+    access.control.allow.origin=*
+  log4j.properties: |-
+    log4j.rootLogger=INFO, stdout
+    log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+    log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+    log4j.appender.stdout.layout.ConversionPattern=[%d] %p %m (%c:%L)%n
+    log4j.logger.kafka=WARN, stdout
+    log4j.logger.org.apache.zookeeper=WARN, stdout
+    log4j.logger.org.apache.kafka=WARN, stdout
+    log4j.logger.org.I0Itec.zkclient=WARN, stdout
+    log4j.additivity.kafka.server=false
+    log4j.additivity.kafka.consumer.ZookeeperConsumerConnector=false
+    log4j.logger.org.apache.kafka.clients.Metadata=DEBUG, stdout
+    log4j.logger.org.apache.kafka.clients.consumer.internals.AbstractCoordinator=INFO, stdout
+

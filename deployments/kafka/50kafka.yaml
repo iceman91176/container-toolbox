@@ -1,0 +1,147 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  creationTimestamp: null
+  generation: 1
+  name: kafka
+spec:
+  podManagementPolicy: Parallel
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: kafka
+  serviceName: broker
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: kafka
+    spec:
+      containers:
+      - command:
+        - ./bin/kafka-server-start.sh
+        - /etc/kafka/server.properties
+        env:
+        - name: JMX_PORT
+          value: "5555"
+        - name: KAFKA_LOG4J_OPTS
+          value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
+        - name: LOG_DIR
+          value: /tmp/logs
+        image: solsson/kafka:2.2.0
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - sh
+              - -ce
+              - kill -s TERM 1; while $(kill -0 1 2>/dev/null); do sleep 1; done
+        name: broker
+        ports:
+        - containerPort: 29092
+          name: inside
+          protocol: TCP
+        - containerPort: 9092
+          name: outside
+          protocol: TCP
+        - containerPort: 5555
+          name: jmx
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 29092
+          timeoutSeconds: 1
+        resources:
+          limits:
+            memory: 600Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/lib/kafka/data
+          name: kafka-data
+        - mountPath: /etc/kafka
+          name: config
+      dnsPolicy: ClusterFirst
+      initContainers:
+      - command:
+        - /bin/bash
+        - /etc/kafka-configmap/init.sh
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: DOMAIN_FOR_OUTSIDE_ACCESS
+          valueFrom:
+            configMapKeyRef:
+              key: outside-domain
+              name: broker-config
+        - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+          valueFrom:
+            configMapKeyRef:
+              key: replication-factor
+              name: broker-config
+        image: solsson/kafka-initutils@sha256:2cdb90ea514194d541c7b869ac15d2d530ca64889f56e270161fe4e5c3d076ea
+        imagePullPolicy: IfNotPresent
+        name: init-config
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/kafka-configmap
+          name: configmap
+        - mountPath: /etc/kafka
+          name: config
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: broker-config
+        name: configmap
+      - emptyDir: {}
+        name: config
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - metadata:
+      creationTimestamp: null
+      name: kafka-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+    status:
+      phase: Pending
+status:
+  collisionCount: 0
+  currentReplicas: 1
+  currentRevision: kafka-69db8fcff9
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  updateRevision: kafka-69db8fcff9
+  updatedReplicas: 1
