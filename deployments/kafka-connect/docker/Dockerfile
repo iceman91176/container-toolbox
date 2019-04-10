@@ -1,12 +1,12 @@
 FROM solsson/kafka:2.2.0
-
+USER root
 # referenced from dependency versions in the maven pom
 ENV CP_VERSION=5.2.1
 
 ADD pom-kafka-connect-jdbc.xml /tmp/pom-kafka-connect-jdbc.xml
 
 # avoid patching kafka-run-class.sh, by hijacking one of the unused paths where it globs for jars
-ENV JARS_DIR=/usr/share/java
+ENV JARS_DIR=/usr/share/java/kafka
 
 RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
@@ -26,8 +26,10 @@ RUN set -ex; \
   \
   apt-get purge -y --auto-remove $buildDeps; \
   rm -rf /var/lib/apt/lists/*; \
-  rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt
+  rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt; \
+  chown -R "kafka:0" $JARS_DIR
 
+USER kafka
 ENTRYPOINT ["./bin/connect-distributed.sh"]
 
 
