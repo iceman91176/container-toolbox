@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ksql-server
+  labels:
+    app: ksql-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ksql-server
+  template:
+    metadata:
+      labels:
+        app: ksql-server
+    spec:
+      containers:
+      - name: ksql-server
+        image: docker-registry.default.svc:5000/ksql-build/ksql-server:latest
+        #ToDo - get from configmap
+        env:
+        - name: KSQL_OPTS
+          value: "-Dbootstrap.servers=bootstrap.kafka-dev:29092 -Dlisteners=http://0.0.0.0:8080 -Dksql.schema.registry.url=http://schema-registry.kafka-dev:8080"
+        - name: KSQL_BOOTSTRAP_SERVERS
+          value: bootstrap.kafka-dev:29092
+        #- name: KSQL_SERVER_PORT
+        #  value: "8080"
+        #- name: KSQL_PORT
+        #  value: "8080"
+        - name: KSQL_KSQL_SERVICE_ID
+          value: "ksql-dev"   
+        ports:
+        - containerPort: 8080
