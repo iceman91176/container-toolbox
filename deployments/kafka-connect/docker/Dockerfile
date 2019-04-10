@@ -1,5 +1,4 @@
 FROM solsson/kafka:2.2.0
-USER root
 # referenced from dependency versions in the maven pom
 ENV CP_VERSION=5.2.1
 
@@ -12,7 +11,7 @@ RUN set -ex; \
   export DEBIAN_FRONTEND=noninteractive; \
   runDeps=''; \
   buildDeps='curl ca-certificates'; \
-  apt-get update && apt-get install -y $runDeps $buildDeps --no-install-recommends; \
+  /usr/bin/apt-get update && apt-get install -y $runDeps $buildDeps --no-install-recommends; \
   \
   MAVEN_VERSION=3.5.0 PATH=$PATH:/opt/maven/bin; \
   mkdir -p /opt/maven; \
@@ -24,12 +23,10 @@ RUN set -ex; \
   \
   rm -Rf /opt/src /opt/maven /root/.m2; \
   \
-  apt-get purge -y --auto-remove $buildDeps; \
+  /usr/bin/apt-get purge -y --auto-remove $buildDeps; \
   rm -rf /var/lib/apt/lists/*; \
   rm -rf /var/log/dpkg.log /var/log/alternatives.log /var/log/apt; \
-  chown -R "kafka:0" $JARS_DIR
 
-USER kafka
 ENTRYPOINT ["./bin/connect-distributed.sh"]
 
 
