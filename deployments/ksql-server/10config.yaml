@@ -1,0 +1,10 @@
+apiVersion: v1
+data:
+  ksql_ksql_service_id: "ksql-dev"
+  ksql_bootstrap_servers: "bootstrap.kafka-dev:29092"
+  ksql_opts: "-Dbootstrap.servers=bootstrap.kafka-dev:29092 -Dlisteners=http://0.0.0.0:8080
+    -Dksql.schema.registry.url=http://schema-registry.kafka-dev:8080"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: ksql-config
