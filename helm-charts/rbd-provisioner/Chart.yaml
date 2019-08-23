@@ -1,0 +1,7 @@
+#
+#
+
+apiVersion: v1
+description: K82 RBD Provisioner
+name: rbd-provisioner
+version: 0.1.0

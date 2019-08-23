@@ -1,0 +1,33 @@
+global:
+  defaultStorageClass: fast
+  tolerations: [
+      {
+        "key": "node-role.kubernetes.io/master",
+        "operator": "Exists"
+      }
+    ]
+  replicas: 3
+
+classdefaults:
+  adminId: admin
+  adminSecretName: ceph-admin
+  monitors:
+  - 192.168.204.4:6789
+  - 192.168.204.3:6789
+  - 192.168.204.22:6789
+classes:
+- name: standard
+  pool: kube-rbd
+  userId: k8s01
+  userSecretName: ceph-pool-standard
+  userSecret: mysecret
+- name: fast
+  pool: kube-rbd-gold
+  userId: k8s01
+  userSecretName: ceph-pool-fast
+  userSecret: mysecret
+
+images:
+  tags:
+    rbd_provisioner: quay.io/external_storage/rbd-provisioner:latest
+
