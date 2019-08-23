@@ -26,6 +26,11 @@
       <name>Confluent</name>
       <url>${confluent.maven.repo}</url>
     </repository>
+    <repository>
+      <id>witcom-nexus</id>
+      <name>WiTCOM Nexus</name>
+      <url>https://nexus.dev.witcom.services/repository/maven-public/</url>
+    </repository>
   </repositories>
 
   <dependencies>
@@ -45,6 +50,12 @@
     <groupId>com.microsoft.sqlserver</groupId>
     <artifactId>mssql-jdbc</artifactId>
     <version>7.2.1.jre11</version>
+</dependency>
+<!-- Oracle -->
+<dependency>
+  <groupId>com.oracle</groupId>
+  <artifactId>ojdbc14</artifactId>
+  <version>12.1.0.2.0</version>
 </dependency>
 
   </dependencies>
