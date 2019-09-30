@@ -1,0 +1,63 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>se.repos</groupId>
+  <artifactId>kafka-connect-jdbc-build</artifactId>
+  <version>1.0.0</version>
+
+  <licenses>
+    <license>
+      <name>Apache License 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <properties>
+    <confluent.maven.repo>http://packages.confluent.io/maven/</confluent.maven.repo>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>confluent</id>
+      <name>Confluent</name>
+      <url>${confluent.maven.repo}</url>
+    </repository>
+    <repository>
+      <id>witcom-nexus</id>
+      <name>WiTCOM Nexus</name>
+      <url>https://nexus.dev.witcom.services/repository/maven-public/</url>
+    </repository>
+  </repositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-connect-jdbc</artifactId>
+      <version>${env.CP_VERSION}</version>
+    </dependency>
+    <!-- useful jdbc drivers in addition to those that are already dependencies of kafka-connect-jdbc -->
+    <dependency>
+      <groupId>org.mariadb.jdbc</groupId>
+      <artifactId>mariadb-java-client</artifactId>
+      <version>2.1.0</version>
+    </dependency>
+<!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
+<dependency>
+    <groupId>com.microsoft.sqlserver</groupId>
+    <artifactId>mssql-jdbc</artifactId>
+    <version>7.2.1.jre11</version>
+</dependency>
+<!-- Oracle -->
+<dependency>
+  <groupId>com.oracle</groupId>
+  <artifactId>ojdbc14</artifactId>
+  <version>12.1.0.2.0</version>
+</dependency>
+
+  </dependencies>
+
+</project>
