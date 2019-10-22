@@ -16,4 +16,3 @@ LABEL io.k8s.description="nginx angular-runtime" \
 USER root:root
 ADD config/nginx.conf /etc/
 
-USER nginx
