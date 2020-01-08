@@ -2,7 +2,7 @@ FROM solsson/kafka:2.2.0
 # referenced from dependency versions in the maven pom
 ENV CP_VERSION=5.2.1
 
-ADD pom-kafka-connect-jdbc.xml pom-avro-converter.xml pom-registry-client.xml /tmp/
+ADD pom-kafka-connect-jdbc.xml pom-avro-converter.xml pom-registry-client.xml pom-kafka-connect-smt.xml /tmp/
 
 # avoid patching kafka-run-class.sh, by hijacking one of the unused paths where it globs for jars
 ENV JARS_DIR=/usr/share/java/kafka
@@ -22,6 +22,7 @@ RUN set -ex; \
   mvn -f /tmp/pom-kafka-connect-jdbc.xml dependency:copy-dependencies -DincludeScope=runtime -DoutputDirectory=$JARS_DIR/kafka-connect-jdbc; \
   mvn -f /tmp/pom-avro-converter.xml dependency:copy-dependencies -DincludeScope=runtime -DoutputDirectory=$JARS_DIR/avro-converter; \
   mvn -f /tmp/pom-registry-client.xml dependency:copy-dependencies -DincludeScope=runtime -DoutputDirectory=$JARS_DIR/registry-client; \
+  mvn -f /tmp/pom-kafka-connect-smt.xml dependency:copy-dependencies -DincludeScope=runtime -DoutputDirectory=$JARS_DIR/connect-smt; \
   \
   rm -Rf /opt/src /opt/maven /root/.m2; \
   \

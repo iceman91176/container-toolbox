@@ -1,0 +1,70 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>se.repos</groupId>
+  <artifactId>kafka-connect-smt-build</artifactId>
+  <version>1.0.0</version>
+
+  <licenses>
+    <license>
+      <name>Apache License 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <properties>
+    <confluent.maven.repo>http://packages.confluent.io/maven/</confluent.maven.repo>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>confluent</id>
+      <name>Confluent</name>
+      <url>${confluent.maven.repo}</url>
+    </repository>
+    <repository>
+      <id>witcom-nexus</id>
+      <name>WiTCOM Nexus</name>
+      <url>https://nexus.dev.witcom.services/repository/maven-public/</url>
+    </repository>
+  </repositories>
+
+  <dependencies>
+
+<dependency>
+  <groupId>de.witcom.kafka.connect.smt</groupId>
+  <artifactId>Namespacefy</artifactId>
+  <version>1.0</version>
+  <type>pom</type>
+
+       <exclusions>
+         <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+        </exclusion>
+<!--
+        <exclusion>
+          <groupId>org.apache.kafka</groupId>
+          <artifactId>connect-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.kafka</groupId>
+          <artifactId>connect-transforms</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.kafka</groupId>
+          <artifactId>kafka-clients</artifactId>
+        </exclusion>
+-->
+      </exclusions>		
+
+
+</dependency>
+
+  </dependencies>
+
+</project>
