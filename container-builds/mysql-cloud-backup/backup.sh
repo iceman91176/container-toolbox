@@ -68,7 +68,7 @@ mysqldump $MARIADB_HOST_OPTS $MARIADB_DATABASE | gzip > ./dumps/dump.sql.gz
 
 echo "Uploading dump to bucket $S3_BUCKET"
 
-cat ./dumps/dump.sql.gz | aws s3 $AWS_ARGS cp - s3://$S3_BUCKET/$S3_PREFIX/$(date +"%Y")/$(date +"%m")/$(date +"%d")/${MARIADB_DATABASE}_$(date +"%H_%M_%SZ").sql.gz || exit 2
+cat ./dumps/dump.sql.gz | aws s3 $AWS_ARGS cp - s3://$S3_BUCKET/$S3_PREFIX/${MARIADB_DATABASE}_$(date +"%Y-%m-%dT%H_%M_%SZ").sql.gz || exit 2
 
 rm ./dumps/dump.sql.gz
 
