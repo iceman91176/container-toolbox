@@ -6,13 +6,13 @@ RUN apk -v --update add \
         groff \
         less \
         mailcap \
-        mysql-client \
+        postgresql \
         curl \
         py-crcmod \
         bash \
         libc6-compat \
         gnupg \
-        coreutils \        
+        coreutils \
         gzip \
         && \
     pip3 install --upgrade awscli s3cmd python-magic && \
@@ -24,9 +24,7 @@ RUN apk -v --update add \
 RUN addgroup -S cloudbackup && adduser -S cloudbackup -G cloudbackup -u 1001
 RUN mkdir /cloudbackup && mkdir /cloudbackup/dumps && chown -Rf cloudbackup:cloudbackup /cloudbackup
 
-# Tell docker that all future commands should run as the appuser user
-
-ENV MARIADB_DATABASE=NONE MARIADB_HOST=NONE MARIADB_PORT=3306 MARIADB_USER=NONE MARIADB_PASSWORD=NONE MARIADB_EXTRA_OPTS='' S3_ACCESS_KEY_ID=NONE S3_SECRET_ACCESS_KEY=NONE S3_BUCKET=NONE \
+ENV POSTGRES_DATABASE=NONE POSTGRES_HOST=NONE POSTGRES_PORT=3306 POSTGRES_USER=NONE POSTGRES_PASSWORD=NONE POSTGRES_EXTRA_OPTS='' S3_ACCESS_KEY_ID=NONE S3_SECRET_ACCESS_KEY=NONE S3_BUCKET=NONE \
     S3_PREFIX='backup' \
     S3_S3V4=no \
     RETENTION_DAYS=30 \
@@ -41,3 +39,4 @@ ADD backup.sh backup.sh
 USER cloudbackup
 
 CMD ["sh", "run.sh"]
+
