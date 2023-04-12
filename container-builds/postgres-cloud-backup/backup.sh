@@ -74,7 +74,7 @@ pg_dump $POSTGRES_HOST_OPTS $POSTGRES_DATABASE | gzip > ./dumps/dump.sql.gz
 
 echo "Uploading dump to $S3_BUCKET"
 
-cat dump.sql.gz | s3cmd $AWS_ARGS put - s3://$S3_BUCKET/$S3_PREFIX/$(date +"%Y")/$(date +"%m")/$(date +"%d")/${POSTGRES_DATABASE}_$(date +"%H:%M:%SZ").sql.gz || exit 2
+cat ./dumps/dump.sql.gz | aws s3 $AWS_ARGS cp - s3://$S3_BUCKET/$S3_PREFIX/${POSTGRES_DATABASE}_$(date +"%Y-%m-%dT%H_%M_%SZ").sql.gz || exit 2
 
 rm ./dumps/dump.sql.gz
 
