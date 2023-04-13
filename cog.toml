@@ -1,0 +1,26 @@
+from_latest_tag = false
+ignore_merge_commits = true
+branch_whitelist = ["main"]
+pre_bump_hooks = []
+post_bump_hooks = []
+pre_package_bump_hooks = []
+post_package_bump_hooks = []
+
+[commit_types]
+
+[changelog]
+template = "monorepo_remote"
+package_template = "package_remote"
+remote = "github.com"
+repository = "container-toolbox"
+owner = "iceman91176"
+authors = [
+    { signature = "Carsten Buchberger", username = "iceman91176" },
+]
+
+[bump_profiles]
+
+[packages]
+postgres-cloud-backup = { path = "container-builds/postgres-cloud-backup" }
+mysql-cloud-backup = { path = "container-builds/mysql-cloud-backup" }
+mysql-cloud-restore = { path = "container-builds/mysql-cloud-restore" }
