@@ -22,5 +22,6 @@ authors = [
 
 [packages]
 postgres-cloud-backup = { path = "container-builds/postgres-cloud-backup" }
+postgres-cloud-restore = { path = "container-builds/postgres-cloud-restore" }
 mysql-cloud-backup = { path = "container-builds/mysql-cloud-backup" }
 mysql-cloud-restore = { path = "container-builds/mysql-cloud-restore" }
